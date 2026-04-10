@@ -1,0 +1,15 @@
+# netlify.toml  —  frontend deployment config
+[build]
+  publish = "."    # serve from the frontend/ directory root
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+
+# Optional: redirect API calls to your deployed backend during build
+# [[redirects]]
+#   from = "/api/*"
+#   to   = "https://your-backend.onrender.com/:splat"
+#   status = 200

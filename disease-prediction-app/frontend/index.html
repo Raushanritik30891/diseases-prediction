@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediScan AI — Disease Prediction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="bg-canvas">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-dna"></i></span>
+      <span class="logo-text">Medi<span class="accent">Scan</span></span>
+      <span class="logo-badge">AI</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#predict">Diagnose</a>
+      <a href="#how">How it works</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="header-cta">
+      <span class="pulse-dot"></span>
+      <span>Model online</span>
+    </div>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="predict">
+    <div class="hero-badge"><i class="fa-solid fa-shield-virus"></i> Powered by Random Forest ML</div>
+    <h1 class="hero-title">
+      Predict diseases<br/>
+      <span class="hero-gradient">before they predict you.</span>
+    </h1>
+    <p class="hero-sub">
+      Select your symptoms below and let our AI model — trained on 40+ diseases —
+      suggest a possible diagnosis and personalised precautions.
+    </p>
+    <p class="disclaimer"><i class="fa-solid fa-triangle-exclamation"></i>
+      For educational purposes only. Always consult a licensed physician.
+    </p>
+  </section>
+
+  <!-- ── MAIN CARD ── -->
+  <main class="main-wrap">
+
+    <!-- Symptom selector -->
+    <section class="card glass" id="symptom-card">
+      <div class="card-header">
+        <div class="card-icon"><i class="fa-solid fa-list-check"></i></div>
+        <div>
+          <h2>Select Symptoms</h2>
+          <p class="card-sub">Choose all symptoms you are currently experiencing</p>
+        </div>
+      </div>
+
+      <!-- Search + tag input -->
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input
+          id="symptom-search"
+          type="text"
+          placeholder="Search symptoms… e.g. Fever, Headache"
+          autocomplete="off"
+        />
+        <button id="clear-search" title="Clear search"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Dropdown suggestions -->
+      <ul id="suggestions" class="suggestions hidden"></ul>
+
+      <!-- Selected chips -->
+      <div id="selected-wrap" class="selected-wrap hidden">
+        <span class="selected-label"><i class="fa-solid fa-tag"></i> Selected:</span>
+        <div id="chips" class="chips"></div>
+      </div>
+
+      <!-- Symptom grid -->
+      <div id="symptom-grid" class="symptom-grid"></div>
+
+      <!-- Predict button -->
+      <button id="predict-btn" class="btn-predict" disabled>
+        <span class="btn-inner">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Analyse Symptoms</span>
+        </span>
+        <div class="btn-ripple"></div>
+      </button>
+    </section>
+
+    <!-- Loading state -->
+    <div id="loading-card" class="card glass loading-card hidden">
+      <div class="dna-loader">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="loading-text">Analysing symptom pattern…</p>
+      <div class="loading-bar"><div class="loading-progress"></div></div>
+    </div>
+
+    <!-- Result card -->
+    <section id="result-card" class="card glass result-card hidden">
+      <div class="result-header">
+        <div class="result-icon"><i class="fa-solid fa-microscope"></i></div>
+        <div>
+          <span class="result-label">AI Diagnosis Result</span>
+          <h2 id="disease-name" class="disease-name">—</h2>
+        </div>
+        <div id="confidence-ring" class="confidence-ring">
+          <svg viewBox="0 0 80 80">
+            <circle class="ring-bg"   cx="40" cy="40" r="32"/>
+            <circle class="ring-fill" cx="40" cy="40" r="32" id="ring-arc"/>
+          </svg>
+          <span id="confidence-pct" class="confidence-pct">—</span>
+        </div>
+      </div>
+
+      <div class="result-body">
+        <!-- Precautions -->
+        <div class="prec-section">
+          <h3><i class="fa-solid fa-shield-heart"></i> Recommended Precautions</h3>
+          <ul id="precautions-list" class="prec-list"></ul>
+        </div>
+
+        <!-- Matched symptoms -->
+        <div class="matched-section">
+          <h3><i class="fa-solid fa-circle-check"></i> Matched Symptoms</h3>
+          <div id="matched-chips" class="chips chips-matched"></div>
+        </div>
+      </div>
+
+      <!-- Alternatives -->
+      <div class="alternatives-section">
+        <h3><i class="fa-solid fa-layer-group"></i> Other Possibilities</h3>
+        <div id="alternatives" class="alternatives"></div>
+      </div>
+
+      <button class="btn-reset" id="reset-btn">
+        <i class="fa-solid fa-rotate-left"></i> New Diagnosis
+      </button>
+    </section>
+
+  </main>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how-section" id="how">
+    <div class="section-label">Process</div>
+    <h2 class="section-title">How MediScan AI works</h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+        <h3>Select Symptoms</h3>
+        <p>Search or browse 130+ symptoms. Pick everything you're experiencing.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon"><i class="fa-solid fa-brain"></i></div>
+        <h3>AI Analysis</h3>
+        <p>A Random Forest model trained on curated medical data analyses the pattern.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon"><i class="fa-solid fa-file-medical"></i></div>
+        <h3>Get Results</h3>
+        <p>Receive a probable diagnosis, confidence score and actionable precautions.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon"><i class="fa-solid fa-user-doctor"></i></div>
+        <h3>Consult a Doctor</h3>
+        <p>Use the result as a conversation starter with a licensed medical professional.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section class="about-section" id="about">
+    <div class="about-grid">
+      <div class="about-stat"><span class="stat-num">40+</span><span class="stat-label">Diseases</span></div>
+      <div class="about-stat"><span class="stat-num">130+</span><span class="stat-label">Symptoms</span></div>
+      <div class="about-stat"><span class="stat-num">RF</span><span class="stat-label">Algorithm</span></div>
+      <div class="about-stat"><span class="stat-num">REST</span><span class="stat-label">API</span></div>
+    </div>
+    <p class="about-copy">
+      MediScan AI is an open-source project built with Python, Flask, scikit-learn and vanilla JS.
+      The model uses a Random Forest classifier on publicly available symptom–disease datasets.
+    </p>
+  </section>
+
+  <footer class="footer">
+    <span>Built with <i class="fa-solid fa-heart"></i> for learning purposes · Not a substitute for medical advice</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
