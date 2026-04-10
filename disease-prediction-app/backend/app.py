@@ -18,13 +18,17 @@ CORS(
     supports_credentials=True,
 )
 
-# Extra safety for headers (handles all browsers)
-@app.after_request
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-    return response
+@app.before_request
+def handle_options():
+    if request.method == "OPTIONS":
+        response = app.make_default_options_response()
+        headers = response.headers
+
+        headers["Access-Control-Allow-Origin"] = "*"
+        headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+
+        return response
 
 # ── Paths ─────────────────────────────────────────────
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
