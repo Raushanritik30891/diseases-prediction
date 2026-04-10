@@ -1,34 +1,37 @@
 """
-app.py  –  Disease Prediction Flask API
+app.py – Disease Prediction Flask API (FINAL VERSION)
 """
 
 import os
 import pickle
 import numpy as np
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 
 # ── App Setup ─────────────────────────────────────────
 app = Flask(__name__)
 
-# ✅ FULL CORS FIX (important)
-CORS(
-    app,
-    resources={r"/*": {"origins": "*"}},
-    supports_credentials=True,
-)
+# Enable CORS (basic)
+CORS(app)
 
+# 🔥 GLOBAL PREFLIGHT HANDLER (MOST IMPORTANT)
 @app.before_request
-def handle_options():
+def handle_preflight():
     if request.method == "OPTIONS":
-        response = app.make_default_options_response()
-        headers = response.headers
-
-        headers["Access-Control-Allow-Origin"] = "*"
-        headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-        headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-
+        response = make_response()
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         return response
+
+# 🔥 FORCE HEADERS ON ALL RESPONSES
+@app.after_request
+def apply_cors(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
+
 
 # ── Paths ─────────────────────────────────────────────
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
@@ -72,7 +75,7 @@ def get_symptoms():
 @app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
 
-    # Handle preflight manually (extra safe)
+    # Preflight handled above, but extra safety
     if request.method == "OPTIONS":
         return jsonify({"status": "ok"}), 200
 
