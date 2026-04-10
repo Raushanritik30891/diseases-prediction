@@ -11,7 +11,7 @@
 // Change this to your deployed backend URL for production
 const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://localhost:5000"
-  : "https://your-backend.onrender.com";   // ← replace with real URL after deployment
+  : "https://diseases-prediction-6.onrender.com";   // ← replace with real URL after deployment
 
 // ── Fallback symptom list (used when API is unreachable) ───────────────────
 const FALLBACK_SYMPTOMS = [
