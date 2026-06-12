@@ -10,15 +10,15 @@
 
 ### Home Page
 
-![Home](frontend/home.png)
+![Home](disease-prediction-app/frontend/home.png)
 
 ### Symptom Selection
 
-![Symptoms](frontend/symptoms.png)
+![Symptoms](disease-prediction-app/frontend/symptoms.png)
 
 ### Disease Prediction Result
 
-![Prediction](frontend/prediction.png)
+![Prediction](disease-prediction-app/frontend/prediction.png)
 
 ---
 
